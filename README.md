@@ -12,7 +12,9 @@ INSERT DESCRIPTION
 - <b>MongoDB</b>
 - <b>ExpressJS</b>
 - <b>ReactJS</b>
-- <b>NodeJS</b> 
+- <b>NodeJS</b>
+- <b>MaterialUI</b>
+- <b>OpenAI API</b>
 
 
 <h2>Environments Used </h2>
