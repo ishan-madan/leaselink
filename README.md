@@ -1,7 +1,7 @@
 <h1>LeaseLink</h1>
 
 <h2>Description</h2>
-INSERT DESCRIPTION
+WIP - COMING SOON!!
 <br />
 
 
@@ -22,7 +22,7 @@ INSERT DESCRIPTION
 - <b>MERN Stack</b>
 
 <h2>Program walk-through:</h2>
-
+WIP - COMING SOON!!
 <p align="center">
 STEP 1 <br/>
 <img src=""/>
