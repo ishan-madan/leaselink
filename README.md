@@ -1,10 +1,10 @@
- # $\textsf{\color{lime} LeaseLink}$ $\text{ }$ $\text{ }$ PROJECT IS IN PROGRESS - COMING SOON!
+ # $\textsf{\color{skyblue} LeaseLink}$ $\text{ }$ $\text{ }$ PROJECT IS IN PROGRESS - COMING SOON!
 
-## $\textsf{\color{purple} Description}$
+## $\textsf{\color{lightgreen} Description}$
 LeaseLink is a full stack application designed to assist tenants in troubleshooting and resolving property maintenance issues. Using the power of OpenAI's GPT, tenants can interact with a chatbot to receive step-by-step plans of action to fix common problems. If the issue cannot be resolved through troubleshooting, the bot provides contact information for professionals who can offer further assistance.
 
 
-## $\textsf{\color{purple} Features}$
+## $\textsf{\color{lightgreen} Features}$
 
 ### 1. Intelligent Troubleshooting Bot
 - Engage with a chatbot powered by OpenAI's GPT to identify and troubleshoot property maintenance issues.
@@ -30,7 +30,7 @@ LeaseLink is a full stack application designed to assist tenants in troubleshoot
 - Implement secure user authentication and validation using JWT web tokens.
 - Enhance security measures to protect user accounts and sensitive information.
 
-## $\textsf{\color{purple} Languages and Utilities Used}$
+## $\textsf{\color{lightgreen} Languages and Utilities Used}$
 - TypeScript
 - JavaScript
 - MongoDB
@@ -43,6 +43,6 @@ LeaseLink is a full stack application designed to assist tenants in troubleshoot
 - JWT Web Tokens
 - HTML/CSS
 
-# $\textsf{\color{lime} LeaseLink Program Walkthrough}$
+# $\textsf{\color{skyblue} LeaseLink Program Walkthrough}$
 
-## $\textsf{\color{purple} Work in Progress - COMING SOON}$
+## $\textsf{\color{lightgreen} Work in Progress - COMING SOON}$
