@@ -29,13 +29,4 @@ const vendorSchema = new mongoose.Schema({
     },
 });
 
-export interface Vendor extends mongoose.Document {
-    vendorid: string;
-    vendorType: string;
-    vendorName: string;
-    vendorEmail?: string;
-    vendorPhone?: string;
-    vendorWebsite?: string;
-}
-
 export default mongoose.model("Vendor", vendorSchema);
