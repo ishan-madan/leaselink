@@ -84,7 +84,7 @@ export const addVendor = async (req, res, next) => {
         const existingVendor = property.vendors.find(vendor => vendor.vendorName === vendorName &&
             vendor.vendorType === vendorType);
         if (existingVendor) {
-            return res.status(401).send("Vendor with this name, type, and phone/email already exists for this property");
+            return res.status(401).send(`Vendor with name: "${vendorName}" and type: "${vendorType}" already exists for this property`);
         }
         // create vendor object with available optional info from request data
         const newVendor = {
@@ -159,17 +159,39 @@ export const deleteAllVendors = async (req, res, next) => {
     }
 };
 // currently needs: 
-// COPY PASTE THE DELETE VENDOR FUNCTIONALITY AND ADD VENDOR FUNCTIONALITY IN
 export const updateVendor = async (req, res, next) => {
     try {
         // get values from the request
         const { address, vendorType, vendorName, vendorEmail, vendorPhone, vendorWebsite } = req.body;
-        // delete old vendor
-        deleteVendor(req, res, next);
-        // add new vendor
-        addVendor(req, res, next);
+        // find property
+        const property = await Property.findOne({ address });
+        // 404 error if property does not exist
+        if (!property) {
+            return res.status(404).json({ message: "Property not found" });
+        }
+        // find the index of the vendor in the vendors array based on vendorName and vendorType
+        const index = property.vendors.findIndex(vendor => vendor.vendorName === vendorName && vendor.vendorType === vendorType);
+        // 404 error is vendor does not exist
+        if (index === -1) {
+            return res.status(404).json({ message: "Vendor not found for this property" });
+        }
+        // if you dont get either the phone or the email, then throw 400 error
+        if (!vendorEmail && !vendorPhone) {
+            return res.status(400).json({ message: "An email or phone number is required" });
+        }
+        // remove the vendor from the vendors array and save to a new constant
+        const updatedVendor = property.vendors.splice(index, 1)[0];
+        // update email, phone, and website as necessary
+        updatedVendor.vendorEmail = vendorEmail;
+        updatedVendor.vendorPhone = vendorPhone;
+        updatedVendor.vendorWebsite = vendorWebsite;
+        // push updated Vendor back to vendor array
+        property.vendors.push(updatedVendor);
+        // save new info to database
+        property.markModified("vendors");
+        await property.save();
         // return status
-        return res.status(200).json({ message: "OK" });
+        return res.status(200).json({ message: "OK", updatedVendor: updatedVendor });
     }
     catch (error) {
         console.log(error);

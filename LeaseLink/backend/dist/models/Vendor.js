@@ -5,14 +5,14 @@ const vendorSchema = new mongoose.Schema({
         type: String,
         default: randomUUID(),
     },
-    vendorType: {
-        type: String,
-        required: true,
-    },
     vendorName: {
         type: String,
         required: true,
         unique: true,
+    },
+    vendorType: {
+        type: String,
+        required: true,
     },
     vendorEmail: {
         type: String,
