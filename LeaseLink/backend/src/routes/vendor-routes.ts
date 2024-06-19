@@ -19,7 +19,7 @@ vendorRoutes.delete("/delete/:address", await validate(vendorDeleteValidator), d
 // delete request to delete a single vendor
 vendorRoutes.delete("/delete/:address/:vendorName/:vendorType/", await validate(vendorDeleteValidator), deleteVendor);
 
-// delete request to delete ALL vendors
+// delete request for deleting ALL vendors
 vendorRoutes.delete("/delete/all/:address/", await validate(addressParamValidator), deleteAllVendors);
 
 export default vendorRoutes;
