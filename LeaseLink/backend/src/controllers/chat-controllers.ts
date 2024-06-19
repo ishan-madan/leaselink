@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import User from "../models/User.js";
+import User from "../models/UserOUTDATED.js";
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/src/resources/index.js";
 

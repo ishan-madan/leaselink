@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Property from "../models/Property.js";
-import User from "../models/User.js";
+import User from "../models/UserOUTDATED.js";
 import Vendor from "../models/Vendor.js";
 
 

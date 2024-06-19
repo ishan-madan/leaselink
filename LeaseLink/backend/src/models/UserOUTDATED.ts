@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { randomUUID } from "crypto";
+
 const chatSchema = new mongoose.Schema({
-    id: {
-        type: String,
+    id:{
+        type:String,
         default: randomUUID(),
     },
     role: {
@@ -14,24 +15,25 @@ const chatSchema = new mongoose.Schema({
         required: true,
     },
 });
+
 // maybe alter this to have chats be an array of an array or an array. outermost array holds all incident reports. middle array is each invididual incident report, containing incident report title and an array of chats. inner most array would be that array of chats. 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
+    name:{
+        type:String,
         required: true,
     },
     admin: {
         type: Boolean,
-        default: false,
-        required: true,
+        default: false, 
+        required: true, 
     },
     email: {
-        type: String,
+        type:String,
         required: true,
         unique: true,
     },
     password: {
-        type: String,
+        type:String,
         required: true,
     },
     address: {
@@ -40,5 +42,5 @@ const userSchema = new mongoose.Schema({
     },
     chats: [chatSchema],
 });
+
 export default mongoose.model("User", userSchema);
-//# sourceMappingURL=User.js.map

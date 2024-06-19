@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/UserOUTDATED.js";
 import OpenAI from "openai";
 export const generateChatCompletion = async (req, res, next) => {
     try {

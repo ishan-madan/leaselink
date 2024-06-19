@@ -1,5 +1,5 @@
 import Property from "../models/Property.js";
-import User from "../models/User.js";
+import User from "../models/UserOUTDATED.js";
 // when the time comes, change this to await User.findById(res.locals.jwtData.id); and pass in res.locals.jwtData.id as the data instead of email
 export const getUserProperty = async (req, res, next) => {
     try {
