@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    address: {
+        type: String,
+        required: true,
+    },
     chats: [chatSchema],
 });
 export default mongoose.model("User", userSchema);

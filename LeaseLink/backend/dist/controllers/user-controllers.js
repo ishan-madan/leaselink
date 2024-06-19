@@ -16,14 +16,14 @@ export const getAllUsers = async (req, res, next) => {
 export const userSignup = async (req, res, next) => {
     // user signup
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, address } = req.body;
         // check if email alr registered
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(401).send("User already exists with this email");
         }
         const hashedPassword = await hash(password, 10);
-        const user = new User({ name, email, password: hashedPassword });
+        const user = new User({ name, email, password: hashedPassword, address });
         await user.save();
         // clear any previous cookies
         res.clearCookie(COOKIE_NAME, {
@@ -49,7 +49,7 @@ export const userSignup = async (req, res, next) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(200).json({ message: "ERROR", casue: error.message });
+        return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 };
 export const userLogin = async (req, res, next) => {
@@ -92,7 +92,7 @@ export const userLogin = async (req, res, next) => {
     }
     catch (error) {
         console.log(error);
-        return res.status(200).json({ message: "ERROR", casue: error.message });
+        return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 };
 export const verifyUser = async (req, res, next) => {
