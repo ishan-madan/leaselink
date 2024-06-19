@@ -30,7 +30,7 @@ export const addProperty = async (req, res, next) => {
 };
 export const deleteProperty = async (req, res, next) => {
     try {
-        const { address } = req.body;
+        const { address } = req.params;
         // check to confirm property exists
         const existingProperty = await Property.findOne({ address });
         // if property does not exist, then return error

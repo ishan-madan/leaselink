@@ -27,7 +27,7 @@ export const userSignup = async (
 ) => {
     // user signup
     try {
-        const {name, email, password, address} = req.body;
+        const {name, email, password, address, admin} = req.body;
         // check if email alr registered
         const existingUser = await User.findOne({email});
         if (existingUser){
@@ -35,7 +35,7 @@ export const userSignup = async (
         }
 
         const hashedPassword = await hash(password, 10);
-        const user = new User({name, email, password: hashedPassword, address});
+        const user = new User({name, email, password: hashedPassword, address, admin});
         await user.save();
 
         // clear any previous cookies
@@ -61,7 +61,7 @@ export const userSignup = async (
             signed: true,
         });
 
-        return res.status(201).json({message: "OK", name: user.name, email: user.email});
+        return res.status(201).json({message: "OK", name: user.name, email: user.email, address:user.address, admin:user.admin});
     } catch (error) {
         console.log(error);
         return res.status(200).json({message: "ERROR", cause:error.message});

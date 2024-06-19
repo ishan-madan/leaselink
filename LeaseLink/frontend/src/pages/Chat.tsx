@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Icon, IconButton, Typography } from '@mui/material'
+import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { red } from '@mui/material/colors';

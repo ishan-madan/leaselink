@@ -33,3 +33,28 @@ export const sendChatRequest = async (message:string) => {
     const data = await res.data;
     return data;
 }
+
+// functionality to delete the request
+
+// const MyComponent = () => {
+//   const deleteProperty = async () => {
+//     const address = "1501 Moss Ln, Southlake, TX 76092";
+//     const encodedAddress = encodeURIComponent(address);
+//     const url = `http://localhost:3000/api/properties/delete/${encodedAddress}`;
+
+//     try {
+//       const response = await axios.delete(url);
+//       console.log('Property deleted successfully:', response.data);
+//     } catch (error) {
+//       console.error('Error deleting property:', error.message);
+//     }
+//   };
+
+//   return (
+//     <button onClick={deleteProperty}>
+//       Delete Property
+//     </button>
+//   );
+// };
+
+// export default MyComponent;

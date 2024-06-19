@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import Property from "../models/Property.js";
-import User from "../models/User.js";
 
 
 export const getAllProperties = async(
@@ -49,7 +48,7 @@ export const deleteProperty = async(
     next: NextFunction
 ) => {
     try {
-        const { address } = req.body;
+        const { address } = req.params;
         // check to confirm property exists
         const existingProperty = await Property.findOne({address});
 

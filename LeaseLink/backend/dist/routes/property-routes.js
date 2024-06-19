@@ -6,7 +6,7 @@ const propertyRoutes = Router();
 propertyRoutes.get("/", getAllProperties);
 // send post request to database to add new property to database
 propertyRoutes.post("/add", await validate(addressValidator), addProperty);
-// send post request to database to delete property
-propertyRoutes.post("/delete", await validate(addressValidator), deleteProperty);
+// send delete request to database to delete property
+propertyRoutes.delete("/delete/:address", deleteProperty);
 export default propertyRoutes;
 //# sourceMappingURL=property-routes.js.map
