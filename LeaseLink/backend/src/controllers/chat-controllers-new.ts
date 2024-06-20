@@ -4,12 +4,18 @@ import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/src/resources/index.js";
 
 //TODO: need to get incident id from the front end or the backend and then display and push the chats for that incident
+// TODO: need to get incident index based on id or title and then use that instead of incidents[0]. CHEKC INCIDENT CONTROLLERS CLOSE INCIDENT METHOD
 export const generateChatCompletion = async (req: Request, res:Response, next:NextFunction) => { 
     try {
         const message = req.body.message;
         const user  = await User.findById(res.locals.jwtData.id);
         if (!user){
             return res.status(401).json({message: "User not registered or token malfunctioned"});
+        }
+
+        //exit method if issue is closed
+        if (user.incidents[0].closeDate){
+            return res.status(403).json({message:"Incident is closed. Please reopen to continue chatting."});
         }
 
         // grab the chats of the user

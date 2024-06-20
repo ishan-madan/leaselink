@@ -5,12 +5,12 @@ import Chat from "./Chat.js";
 const incidentReportSchema = new mongoose.Schema({
     id: {
         type: String,
-        default: randomUUID,
+        default: randomUUID(),
     },
     title: {
         type: String,
         required: true,
-        unique: true,
+        unique: false,
     },
     address: {
         type: String,
@@ -37,9 +37,9 @@ const incidentReportSchema = new mongoose.Schema({
 });
 // Pre-save middleware to calculate and set elapsedTime
 incidentReportSchema.pre('save', function (next) {
-    if (this.closeDate && this.openDate) {
+    if (this.openDate) {
         const openDate = new Date(this.openDate);
-        const closeDate = new Date(this.closeDate);
+        const closeDate = this.closeDate ? new Date(this.closeDate) : new Date(Date.now());
         if (!isNaN(openDate.getTime()) && !isNaN(closeDate.getTime())) {
             const diff = closeDate.getTime() - openDate.getTime();
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));

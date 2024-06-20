@@ -1,4 +1,4 @@
-import User from "../models/UserOUTDATED.js";
+import User from "../models/NewUser.js";
 import { hash, compare } from "bcrypt";
 import { createToken } from "../utils/token-manager.js";
 import { COOKIE_NAME } from "../utils/constants.js";
