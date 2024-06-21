@@ -1,10 +1,38 @@
 import {ReactNode, createContext, useCallback, useContext, useEffect, useState} from "react";
 import { checkAuthStatus, loginUser } from "../helpers/api-communicator";
 
+// elasped time type
+type ElapsedTime = {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+}
+
+// chat type
+type Chat = {
+    id: string;
+    role: string;
+    content: string;
+}
+
+// incident type
+type Incident = {
+    id: string;
+    title: string;
+    address: string;
+    openDate: Date;
+    closeDate?: Date;
+    elapsedTime?: ElapsedTime;
+    chats: Chat[];
+}
+
+
 // defined user type
 type User = {
     name: string;
     email: string;
+    incidents: Incident[];
 
 }
 
@@ -33,7 +61,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         async function checkStatus() {
             const data = await checkAuthStatus();
             if (data) {
-                setUser({email:data.email, name:data.name});
+                setUser({email:data.user.email, name:data.user.name, incidents:data.user.incidents});
                 setisLoggedIn(true);
             }
         }
@@ -44,7 +72,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     const login = async (email:string, password:string) => {
         const data = await loginUser(email, password);
         if (data) {
-            setUser({email:data.email, name:data.name});
+            setUser({email:data.email, name:data.name, incidents:data.incidents});
             setisLoggedIn(true);
         }
         

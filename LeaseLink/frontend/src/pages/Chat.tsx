@@ -4,8 +4,9 @@ import { useAuth } from '../context/AuthContext'
 import { red } from '@mui/material/colors';
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io';
-import { sendChatRequest } from '../helpers/api-communicator';
+import { fetchChats, sendChatRequest } from '../helpers/api-communicator';
 import toast from "react-hot-toast";
+import { useParams } from 'react-router-dom';
 
 type Message = {
   role:"user"|"assistant",
@@ -18,25 +19,54 @@ const Chat = () => {
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const { incidentId } = useParams<{ incidentId: string }>();
+  console.log(incidentId, auth?.user?.name, auth?.user?.email, auth?.user?.incidents);
 
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
     if (inputRef && inputRef.current){
       inputRef.current.value = "";
     }
-    toast.loading("Generating Response", {id:"response"});
-    // console.log("got input");
-    const newMessage:Message = {role:"user", content};
-    setChatMessages((prev) => [...prev, newMessage]);
-    // console.log("got newMessage");
-    const chatData = await sendChatRequest(content);
-    // console.log("got chat Request");
-    setChatMessages([...chatData.chats]);
-    // console.log(chatData.chats);
-    toast.success("", {id:"response"});
+
+    // if closeDate exists
+    if (auth?.user?.incidents[auth?.user?.incidents.findIndex(incident => incident.id === incidentId)].closeDate){
+      toast.error("Incident is closed. Please reopen or create a new incident", {id:"response"});
+      return;
+    }
+
+    if (content.trim() != ""){
+      toast.loading("Generating Response", {id:"response"});
+
+      const newMessage:Message = {role:"user", content};
+      setChatMessages((prev) => [...prev, newMessage]);
+
+      const chatData = await sendChatRequest(content, incidentId ? incidentId : "a");
+
+      setChatMessages([...chatData.chats]);
+      toast.success("", {id:"response"});
+
+    }
 }
 
-  useEffect(() => {
+// USE THIS TO FETCH CHATS. NEED TO PASS IN INCIDENT ID TO THE REQUEST MOST LIKELY
+// Load initial chats on component mount
+useEffect(() => {
+  const fetchInitialChats = async () => {
+    try {
+      // Fetch chats for the incidentId from your API
+      const chatData = await fetchChats(incidentId ? incidentId : "a"); // Implement this function based on your API structure
+      setChatMessages(chatData.chats); // Update state with fetched chat messages
+    } catch (error) {
+      console.error('Error fetching initial chats:', error);
+      // Handle error appropriately, e.g., show a toast notification
+      toast.error('Failed to fetch initial chats');
+    }
+  };
+
+  fetchInitialChats();
+}, [incidentId]);
+
+useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
@@ -59,18 +89,21 @@ const Chat = () => {
             {auth?.user?.name[0]}{auth?.user?.name.split(" ")[1][0]}
           </Avatar>
 
-          <Typography sx={{ml:"15px", mr:"15px", textAlign:"center", fontFamily:"work sans"}}>
-            Welcome to LeaseLink {auth?.user?.name}!
+          <Typography sx={{ ml: "15px", mr: "15px", textAlign: "center", fontFamily: "work sans" }}>
+            {auth?.user?.incidents
+              .filter(incident => incident.id === incidentId) // Filter incidents to match incidentId
+              .map((incident) => (
+                <Typography key={incident.id} sx={{ ml: "15px", mr: "15px", textAlign: "center", fontFamily: "work sans" }}>
+                  {incident.title}
+                </Typography>
+              ))}
           </Typography>
 
-          <Typography sx={{mx:"auto", fontFamily:"work sans", my:4, padding:3}}>
-            What seems to be the problem with your rental property?
-          </Typography>
 
           <Button sx={{width:"200px", my:"auto", color:"white", fontWeight:700, borderRadius:3, mx:"auto", bgcolor:red[300], ":hover":{
             bgcolor:red.A400,
           }}}>
-            Clear Conversation
+            Close Incident
           </Button>
         </Box>
       </Box>

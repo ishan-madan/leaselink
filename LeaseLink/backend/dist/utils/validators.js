@@ -52,4 +52,7 @@ export const vendorDeleteValidator = [
 export const addressParamValidator = [
     param("address").notEmpty().withMessage("Address is required").isString().withMessage("Address must be a string"),
 ];
+export const idValidator = [
+    param("incidentId").isString().withMessage("Please enter a string"),
+];
 //# sourceMappingURL=validators.js.map

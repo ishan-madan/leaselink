@@ -88,7 +88,7 @@ export const userLogin = async (req, res, next) => {
             signed: true,
         });
         // if user exists and password is correct, return OK
-        return res.status(200).json({ message: "OK", name: user.name, email: user.email });
+        return res.status(200).json({ message: "OK", user });
     }
     catch (error) {
         console.log(error);
@@ -109,7 +109,7 @@ export const verifyUser = async (req, res, next) => {
             return res.status(401).send("Permissions didn't match");
         }
         // if user exists and password is correct, return OK
-        return res.status(200).json({ message: "OK", name: user.name, email: user.email });
+        return res.status(200).json({ message: "OK", user });
     }
     catch (error) {
         console.log(error);

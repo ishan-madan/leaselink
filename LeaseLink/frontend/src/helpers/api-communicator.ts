@@ -23,12 +23,23 @@ export const checkAuthStatus = async () => {
 }
 
 
-export const sendChatRequest = async (message:string) => {
-    console.log("started chatRequest");
-    const res = await axios.post("/chat/new", {message});
-    console.log("axios ran");
+export const sendChatRequest = async (message:string, incidentId:string) => {
+    // console.log("started chatRequest");
+    const res = await axios.post("/chat/new", {message, incidentId});
+    // console.log("axios ran");
     if (res.status !== 200) {
         throw new Error("Unable to send chat");
+    }
+    const data = await res.data;
+    return data;
+}
+
+export const fetchChats = async(incidentId:string) => {
+    console.log(`/chat/fetchChats/${incidentId}`);
+    const res = await axios.get(`/chat/fetchChats/${incidentId}`);
+    console.log("axios ran");
+    if (res.status !== 200) {
+        throw new Error("Unable to fetch chats");
     }
     const data = await res.data;
     return data;

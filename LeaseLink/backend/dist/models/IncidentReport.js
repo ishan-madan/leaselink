@@ -5,7 +5,7 @@ import Chat from "./Chat.js";
 const incidentReportSchema = new mongoose.Schema({
     id: {
         type: String,
-        default: randomUUID(),
+        default: () => randomUUID(),
     },
     title: {
         type: String,

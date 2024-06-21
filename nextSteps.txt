@@ -1,0 +1,33 @@
+NEED TO DO:
+
+- Add in functionality for all auto user verifications for all api calls
+
+- add in frontend functionality for delete incident, close/open chat etc
+
+- add in functionality for admin website (add vendors, add properties, property dropdowns, vendor dropdowns, see all incidents and chats)
+
+- Also strat fine tuning openAI and figure out if you can have 
+it call on the api to get data from the database
+
+
+
+
+POSSIBLY DONE BUT NEEDS TO BE CONFIRMED:
+
+- write method in api communicator to fetch the chat messages from 
+the backend upon opening the chat page. Functionality is commented out
+on the chat.tsx page. Need to implement an axios call in the api communicator
+to the fetchChats route
+
+- Next, i want to figure out how to display the 
+incident title on the chat page. I also want to 
+figure out a way to pass in this title as a parameter
+to the api calls for incidents.
+
+- pass the incident id into axios when passing new chat message 
+and then use the incident id passed in to get the incident index 
+and then use that to output chat messages through the res
+
+
+
+CONFIRMED DONE:

@@ -21,7 +21,7 @@ const Login = () => {
       toast.success("Logged In", {id:"login"});
 
       // AUTO NAVIGATES TO CHAT
-      navigate('/chat');
+      navigate('/incidents');
 
       
     } catch (error) {

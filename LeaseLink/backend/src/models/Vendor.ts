@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 const vendorSchema = new mongoose.Schema({
     vendorid: {
         type: String,
-        default: randomUUID(),
+        default: () => randomUUID(),
     },
     vendorName: {
         type: String,

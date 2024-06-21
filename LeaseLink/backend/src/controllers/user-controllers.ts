@@ -114,7 +114,7 @@ export const userLogin = async (
         });
 
         // if user exists and password is correct, return OK
-        return res.status(200).json({message: "OK", name: user.name, email: user.email});
+        return res.status(200).json({message: "OK", user});
     } catch (error) {
         console.log(error);
         return res.status(200).json({message: "ERROR", cause:error.message});
@@ -146,7 +146,7 @@ export const verifyUser = async (
         
 
         // if user exists and password is correct, return OK
-        return res.status(200).json({message: "OK", name: user.name, email: user.email});
+        return res.status(200).json({message: "OK", user});
     } catch (error) {
         console.log(error);
         return res.status(200).json({message: "ERROR", casue:error.message});

@@ -66,3 +66,7 @@ export const vendorDeleteValidator: ValidationChain[] = [
 export const addressParamValidator: ValidationChain[] = [
     param("address").notEmpty().withMessage("Address is required").isString().withMessage("Address must be a string"),
 ]
+
+export const idValidator = [
+    param("incidentId").isString().withMessage("Please enter a string"),
+]

@@ -7,13 +7,13 @@ import NavigationLink from './shared/NavigationLink';
 const Header = () => {
     const auth = useAuth();
   return (
-    <AppBar sx={{bgcolor:"transparent", position:"static", boxShadow:"none"}}>
+    <AppBar sx={{bgcolor:"rgba(255,255,255,0.2)", position:"static", boxShadow:"none", mb:1}}>
         <Toolbar sx={{display:"flex"}}>
             <Logo />
             <div>
                 {auth?.isLoggedIn ? (
                 <>
-                    <NavigationLink bg="#00fffc" to="/chat" text="Chat" textColor='black'/>
+                    <NavigationLink bg="#00fffc" to="/incidents" text="Incidents" textColor='black'/>
                     <NavigationLink bg="#51538f" to="/" text="Logout" textColor='white' onClick={auth.logout} />
 
                 </>
