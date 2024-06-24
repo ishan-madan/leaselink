@@ -69,23 +69,23 @@ export const verifyAdmin = async(
     try {
         // get user
         // MUST CHANGE TO BE "res.locals.jwtData.id" and pass into function to get user
-        const userPropertyData = await getUserProperty(req, res, next);
+        const user = await User.findById(res.locals.jwtData.id);
 
-        if (userPropertyData.error){
-            return {error: userPropertyData.error};
-        }
+        // if (userPropertyData.error){
+        //     return {error: userPropertyData.error};
+        // }
 
         // user is being used to verify that this is an admin user. only admin users should be allowed to add vendors, normal people should not
-        const adminStatus = userPropertyData.user.admin;
+        const adminStatus = user.admin;
 
         if (adminStatus){
             return next();
         }
         else {
-            return res.status(403).json({message:`Admin status required. ${userPropertyData.user.email} is not an admin account`});
+            return res.status(403).json({message:`Admin status required. ${user.email} is not an admin account`});
         }
     } catch (error) {
-        console.error('Error in getUserProperty:', error);
+        console.error('Error in verifyAdmin:', error);
         return { error: error.message };
     }
 }
