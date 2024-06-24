@@ -11,7 +11,7 @@ const vendorRoutes = Router();
 vendorRoutes.get("/", getAllVendors);
 
 // post request to add new vendors to user property
-vendorRoutes.post("/add", await validate(vendorValidator), verifyAdmin, addVendor);
+vendorRoutes.post("/add", await validate(vendorValidator), addVendor);
 
 // delete request to delete a single vendor
 vendorRoutes.delete("/delete/:address/:vendorName/:vendorType/", await validate(vendorDeleteValidator), deleteVendor);

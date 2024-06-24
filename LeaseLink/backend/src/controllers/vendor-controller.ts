@@ -46,17 +46,9 @@ export const getAllVendors = async(
 ) => {
     try {
         // get email from request
-        const email = req.body.email;
+        const address = req.body.address;
 
-        // get property
-         // MUST CHANGE TO BE "res.locals.jwtData.id" and pass into function to get user
-        const userPropertyData = await getUserProperty(req, res, next);
-
-        if (userPropertyData.error){
-            return res.status(401).json({message: await getUserProperty(req, res, next)});
-        }
-
-        const property = userPropertyData.userProperty;
+        const property = await Property.findOne({address});
 
         // get vendors from property 
         const vendors = property.vendors;

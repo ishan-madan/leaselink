@@ -1,6 +1,10 @@
 NEED TO DO:
 
-- Add in functionality for all auto user verifications for all api calls
+- Add in functionality for all auto user verifications for all api calls 
+NOTE: Something about verifyAdmin function is preventing program from switching accounts.
+It keepts getting stuck on one account and it will keep thinking it is that account based 
+on the token, even when its logged out. verifyToken works perfectly fine when i dont have it 
+running on the vandor and property routes. Figure out this issue.
 
 - add in frontend functionality for delete incident, close/open chat etc
 

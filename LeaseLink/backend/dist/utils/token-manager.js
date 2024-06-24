@@ -23,7 +23,7 @@ export const verifyToken = async (req, res, next) => {
                 // console.log("Token verification successful");
                 resolve();
                 res.locals.jwtData = success;
-                console.log("token worked");
+                console.log(success);
                 return next();
             }
         });
