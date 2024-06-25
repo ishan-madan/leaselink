@@ -57,7 +57,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
     // use this to check for cookies
     useEffect(()=>{
-        // fetch if the users cookies are valied, then skip login
+        // fetch if the users cookies are valid, then skip login
         async function checkStatus() {
             const data = await checkAuthStatus();
             if (data) {
