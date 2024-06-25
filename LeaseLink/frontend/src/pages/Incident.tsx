@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, List, ListItem, ListItemText, Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -86,7 +86,7 @@ const Incident = () => {
     //         toast.error('Failed to delete incident');
     //     }
     // };
-    const handleDeleteIncident = (incidentId: string) => {
+    const handleDeleteIncident = () => {
         // Show confirmation dialog before deleting incident
         setDeleteConfirmationOpen(true);
     };
@@ -232,7 +232,7 @@ const Incident = () => {
                             </Button>
                             <Button
                                 variant="contained"
-                                onClick={() => handleDeleteIncident(selectedIncident.id)}
+                                onClick={() => handleDeleteIncident()}
                                 sx={{ bgcolor: '#f44336', color: 'white', ml: 2, mr: 4, '&:hover': {bgcolor: '#c84336'} }} // Adjusted mr value
                             >
                                 Delete Incident
