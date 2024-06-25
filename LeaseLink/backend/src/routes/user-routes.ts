@@ -19,8 +19,8 @@ userRoutes.post("/login", await validate(loginValidator), userLogin);
 // sends get request to the database to get user cookie
 userRoutes.get("/auth-status", verifyToken, verifyUser);
 
-// sends get request to the database to logout
-userRoutes.get("/logout", userLogout);
+// sends post request to the database to logout
+userRoutes.post("/logout", userLogout);
 
 
 

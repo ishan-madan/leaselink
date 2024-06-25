@@ -2,9 +2,8 @@ import User from "../models/NewUser.js";
 // TODO: get user for jwt.local.id token when integrated with front end
 export const getIncidents = async (req, res, next) => {
     try {
-        // get user by email
-        const { email } = req.body;
-        const user = await User.findOne({ email });
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
         if (!user) {
             return { error: "User not registered or token malfunctioned" };
@@ -22,9 +21,9 @@ export const getIncidents = async (req, res, next) => {
 export const createIncident = async (req, res, next) => {
     try {
         // get params
-        const { email, title } = req.body;
-        // get user by email
-        const user = await User.findOne({ email });
+        const { title } = req.body;
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
         if (!user) {
             return { error: "User not registered or token malfunctioned" };
@@ -43,11 +42,26 @@ export const createIncident = async (req, res, next) => {
         };
         // push to incident array
         user.incidents.push(newIncident);
+        const incidentId = user.incidents.slice(-1)[0].id;
         // save to database
         user.markModified("incidents");
         await user.save();
         // return status
-        return res.status(200).json({ message: "Successfully created new incident", incidents: user.incidents });
+        return res.status(200).json({ incidentId });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(200).json({ message: "ERROR", error });
+    }
+};
+export const getIndcidentId = async (req, res, next) => {
+    try {
+        const { title } = req.body;
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
+        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
+        const incidentId = user.incidents[incidentIndex].id;
+        return res.status(200).json({ incidentId });
     }
     catch (error) {
         console.log(error);
@@ -58,9 +72,9 @@ export const createIncident = async (req, res, next) => {
 export const closeIncident = async (req, res, next) => {
     try {
         // get params
-        const { email, title } = req.body;
-        // get user by email
-        const user = await User.findOne({ email });
+        const { title } = req.body;
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
         if (!user) {
             return { error: "User not registered or token malfunctioned" };
@@ -91,9 +105,9 @@ export const closeIncident = async (req, res, next) => {
 export const reopenIncident = async (req, res, next) => {
     try {
         // get params
-        const { email, title } = req.body;
-        // get user by email
-        const user = await User.findOne({ email });
+        const { title } = req.body;
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
         if (!user) {
             return { error: "User not registered or token malfunctioned" };
@@ -124,9 +138,8 @@ export const deleteIncident = async (req, res, next) => {
     try {
         // get params
         const { title } = req.params;
-        const { email } = req.body;
-        // get user by email
-        const user = await User.findOne({ email });
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
         if (!user) {
             return { error: "User not registered or token malfunctioned" };

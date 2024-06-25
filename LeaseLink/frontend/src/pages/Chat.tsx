@@ -20,7 +20,6 @@ const Chat = () => {
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const { incidentId } = useParams<{ incidentId: string }>();
-  console.log(incidentId, auth?.user?.name, auth?.user?.email, auth?.user?.incidents);
 
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
@@ -53,6 +52,7 @@ const Chat = () => {
 useEffect(() => {
   const fetchInitialChats = async () => {
     try {
+      await new Promise(resolve => setTimeout(resolve, 500));
       // Fetch chats for the incidentId from your API
       const chatData = await fetchChats(incidentId ? incidentId : "a"); // Implement this function based on your API structure
       setChatMessages(chatData.chats); // Update state with fetched chat messages
@@ -80,7 +80,6 @@ useEffect(() => {
   
 
   return (
-
     <Box sx={{display:"flex", flex:1, width:"100%", height:"100%", mt:3, gap:3}}>
       <Box sx={{display:{md:"flex", xs:"none", sm:"none"}, flex:0.2, flexDirection:"colun"}}>
         <Box sx={{display:"flex", width:"100%", height:"60vh", bgcolor:"rgb(17, 29, 39)", borderRadius:5, flexDirection:"column", mx:3}}>

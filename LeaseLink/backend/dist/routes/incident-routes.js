@@ -1,16 +1,19 @@
 import { Router } from "express";
-import { closeIncident, createIncident, deleteIncident, getIncidents, reopenIncident } from "../controllers/incident-controller.js";
+import { closeIncident, createIncident, deleteIncident, getIncidents, getIndcidentId, reopenIncident } from "../controllers/incident-controller.js";
+import { verifyToken } from "../utils/token-manager.js";
 // Protected API
 const incidentRoutes = Router();
 // get incidents
-incidentRoutes.get("/", getIncidents);
+incidentRoutes.get("/", verifyToken, getIncidents);
 // create new incident
-incidentRoutes.post("/create", createIncident);
+incidentRoutes.post("/create", verifyToken, createIncident);
 // delete an incident
-incidentRoutes.delete("/delete/:title/", deleteIncident);
+incidentRoutes.delete("/delete/:title/", verifyToken, deleteIncident);
 // close an incident
-incidentRoutes.post("/close", closeIncident);
+incidentRoutes.post("/close", verifyToken, closeIncident);
 // reopen an incident
-incidentRoutes.post("/reopen", reopenIncident);
+incidentRoutes.post("/reopen", verifyToken, reopenIncident);
+// get an incident Id
+incidentRoutes.post("/getIncidentId", verifyToken, getIndcidentId);
 export default incidentRoutes;
 //# sourceMappingURL=incident-routes.js.map

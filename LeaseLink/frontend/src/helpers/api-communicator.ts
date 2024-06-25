@@ -35,13 +35,26 @@ export const sendChatRequest = async (message:string, incidentId:string) => {
 }
 
 export const fetchChats = async(incidentId:string) => {
-    console.log(`/chat/fetchChats/${incidentId}`);
     const res = await axios.get(`/chat/fetchChats/${incidentId}`);
-    console.log("axios ran");
     if (res.status !== 200) {
         throw new Error("Unable to fetch chats");
     }
     const data = await res.data;
+    return data;
+}
+
+export const createIncidentRequest = async(title:string) => {
+    console.log("creating incident: ", title);
+    const res = await axios.post("/incident/create/", {title});
+    console.log("axios ran");
+    if (res.status !== 200) {
+        throw new Error("Unable to fetch chats");
+    }
+
+    const data = await res.data;
+    console.log(res.data);
+    // const res2 = await axios.post("/getIncidentId/", {title});
+    // const id = await res2.data;
     return data;
 }
 

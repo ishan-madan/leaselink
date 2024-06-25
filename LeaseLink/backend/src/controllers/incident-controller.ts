@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/NewUser.js";
+import IncidentReport from "../models/IncidentReport.js";
 
 // TODO: get user for jwt.local.id token when integrated with front end
 export const getIncidents = async(
@@ -8,9 +9,8 @@ export const getIncidents = async(
     next: NextFunction
 ) => {
     try {
-        // get user by email
-        const { email } = req.body;
-        const user = await User.findOne({email});
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
 
         // Handle case where user is not found
         if (!user) {
@@ -35,10 +35,10 @@ export const createIncident = async (
 ) => {
     try {
         // get params
-        const { email, title } = req.body;
+        const { title } = req.body;
 
-        // get user by email
-        const user = await User.findOne({email});
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
 
         // Handle case where user is not found
         if (!user) {
@@ -63,16 +63,41 @@ export const createIncident = async (
         // push to incident array
         user.incidents.push(newIncident);
 
+        const incidentId = user.incidents.slice(-1)[0].id;
+
         // save to database
         user.markModified("incidents");
         await user.save();
 
+
         // return status
-        return res.status(200).json({message:"Successfully created new incident", incidents: user.incidents});
+        return res.status(200).json({incidentId});
 
     } catch (error) {
         console.log(error);
         return res.status(200).json({message:"ERROR", error})
+    }
+}
+
+export const getIndcidentId = async(
+    req: Request, 
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { title } = req.body;
+
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
+
+        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
+
+        const incidentId = user.incidents[incidentIndex].id;
+
+        return res.status(200).json({incidentId});
+    } catch (error) {
+        console.log(error);
+        return res.status(200).json({message:"ERROR", error});
     }
 }
 
@@ -84,10 +109,10 @@ export const closeIncident = async(
 ) => {
     try {
         // get params
-        const { email, title } = req.body;
+        const { title } = req.body;
 
-        // get user by email
-        const user = await User.findOne({email});
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
 
         // Handle case where user is not found
         if (!user) {
@@ -131,10 +156,10 @@ export const reopenIncident = async(
 ) => {
     try {
         // get params
-        const { email, title } = req.body;
+        const { title } = req.body;
 
-        // get user by email
-        const user = await User.findOne({email});
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
 
         // Handle case where user is not found
         if (!user) {
@@ -177,10 +202,9 @@ export const deleteIncident = async (
     try {
         // get params
         const { title } = req.params;
-        const { email } = req.body;
 
-        // get user by email
-        const user = await User.findOne({email});
+        // get user
+        const user = await User.findById(res.locals.jwtData.id);
 
         // Handle case where user is not found
         if (!user) {

@@ -4,8 +4,7 @@ import User from "../models/NewUser.js";
 export const getUserProperty = async (req, res, next) => {
     try {
         // Find user by email
-        const email = req.body.email;
-        const user = await User.findOne({ email });
+        const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
         if (!user) {
             return { error: "User not registered or token malfunctioned" };
@@ -45,21 +44,21 @@ export const verifyAdmin = async (req, res, next) => {
     try {
         // get user
         // MUST CHANGE TO BE "res.locals.jwtData.id" and pass into function to get user
-        const userPropertyData = await getUserProperty(req, res, next);
-        if (userPropertyData.error) {
-            return { error: userPropertyData.error };
-        }
+        const user = await User.findById(res.locals.jwtData.id);
+        // if (userPropertyData.error){
+        //     return {error: userPropertyData.error};
+        // }
         // user is being used to verify that this is an admin user. only admin users should be allowed to add vendors, normal people should not
-        const adminStatus = userPropertyData.user.admin;
+        const adminStatus = user.admin;
         if (adminStatus) {
             return next();
         }
         else {
-            return res.status(403).json({ message: `Admin status required. ${userPropertyData.user.email} is not an admin account` });
+            return res.status(403).json({ message: `Admin status required. ${user.email} is not an admin account` });
         }
     }
     catch (error) {
-        console.error('Error in getUserProperty:', error);
+        console.error('Error in verifyAdmin:', error);
         return { error: error.message };
     }
 };

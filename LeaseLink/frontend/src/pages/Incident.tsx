@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Typography, List, ListItem, ListItemText, Box, Button } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { Typography, List, ListItem, ListItemText, Box, Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import toast from "react-hot-toast";
+import { createIncidentRequest } from '../helpers/api-communicator';
 
 interface Incident {
     id: string;
@@ -15,6 +17,9 @@ const Incident = () => {
     const auth = useAuth();
     const navigate = useNavigate();
     const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
+    const [creatingIncident, setCreatingIncident] = useState(false);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const [incidentTitle, setIncidentTitle] = useState('');
 
     if (!auth) {
         return <Typography>Loading...</Typography>;
@@ -28,6 +33,7 @@ const Incident = () => {
     });
 
     const handleIncidentClick = (incident: Incident) => {
+        setCreatingIncident(false);
         if (selectedIncident && selectedIncident.id === incident.id) {
             // If the clicked incident is already selected, deselect it
             setSelectedIncident(null);
@@ -36,6 +42,15 @@ const Incident = () => {
             setSelectedIncident(incident);
         }
     };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+          handleNewIncidentSubmit();
+        }
+        if (event.key === "Escape"){
+            setCreatingIncident(false);
+        }
+    }
 
     const handleChatClick = (incidentId: string) => {
         navigate(`/chat/${incidentId}`);
@@ -47,8 +62,55 @@ const Incident = () => {
     };
 
     const handleCreateNewIncident = () => {
-        // Implement create new incident functionality here
-        console.log("Creating new incident...");
+        setSelectedIncident(null);
+        setCreatingIncident(true);
+    };
+
+    // const handleNewIncidentSubmit = async() => {
+    //     const content = inputRef.current?.value as string;
+    //     if (inputRef && inputRef.current){
+    //         inputRef.current.value = "";
+    //     }
+    //     console.log(content);
+
+    //     if (content != ""){
+    //         toast.loading("Creating Incidident");
+
+    //         const data = await createIncidentRequest(content);
+            
+    //         const incidentId = data.incidentId;
+
+    //         toast.success("Incident Created");
+
+    //         navigate(`/chat/${incidentId}`);
+
+    //     }
+    // };
+    const handleNewIncidentSubmit = async () => {
+        if (incidentTitle.trim() === '') {
+            console.error('Empty incident title.');
+            return;
+        }
+
+        try {
+            const incidentData = await createIncidentRequest(incidentTitle.trim());
+
+            const incidentId = incidentData.incidentId;
+
+            toast.success('Incident Created');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            navigate(`/chat/${incidentId}`);
+
+        } catch (error) {
+            console.error('Error creating incident:', error);
+            toast.error('Failed to create incident');
+        }
+
+        // const incidentId = auth?.user?.incidents[auth?.user?.incidents.findIndex(incident => incident.title === incidentTitle)].id;
+        // console.log(auth?.user?.incidents);
+        
+
+        setIncidentTitle(''); // Clear the incident title after submission
     };
 
     return (
@@ -84,44 +146,44 @@ const Incident = () => {
                 </List>
             </Box>
 
-            {/* Right side panel with incident details */}
+            {/* Right side panel with incident details or create form */}
             <Box sx={{ p: 2, borderLeft: '1px solid #ccc', display: 'flex', flexDirection: 'column'}}>
-                {selectedIncident ? 
-                <Typography variant="h5" sx={{ mb: 2 }}>
-                    {selectedIncident.title}
-                </Typography> : 
-                <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-                    <Typography variant="h4" sx={{ textAlign: 'center', display: 'block', marginBottom: 1, color: "#ffffff48" }}>
-                        Select an Incident
-                    </Typography>
-                    <Typography variant="h6" sx={{ textAlign: 'center', display: 'block', color: "#ffffff48" }}>
-                    or <a
-                        onClick={handleCreateNewIncident}
-                        style={{
-                            color: '#00bcd4', // Light blue color
-                            textDecoration: 'underline', // Underline text
-                            cursor: 'pointer', // Change cursor to pointer on hover
-                            marginLeft: "5px",
-        }
-                            
-                        }
-                        onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'none'} // Remove underline on hover
-                        onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'underline'} // Add underline when not hovered
+            {creatingIncident ? (
+                // creating incident page
+                <div style={{textAlign: "center"}}>
+                    <Typography variant="h5" sx={{ mb: 2 }}>Create New Incident</Typography>
+                    <TextField 
+                        margin="normal"
+                        InputLabelProps={{style:{color:"white"}}} 
+                        InputProps={{style:{width:"600px", borderRadius:10, fontSize:16, color:"white"}}}
+                        name="Title"
+                        label="Incident Title" 
+                        type="Title"
+                        value={incidentTitle}
+                        onChange={(e) => setIncidentTitle(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <Button
+                        onClick={handleNewIncidentSubmit}
+                        variant="contained"
+                        sx={{ width: '600px', bgcolor: '#00bcd4', color: 'white', margin:"auto", '&:hover': { bgcolor: '#0097a7'} }}
                     >
-                        Create One
-                    </a>
-                    </Typography>
+                        Create New Incident
+                    </Button>
+                    <Button variant="outlined" sx={{display:"block", margin:"auto", width:"600px", mt:"10px"}} onClick={() => setCreatingIncident(false)}>
+                        Cancel
+                    </Button>
                 </div>
-            
-}
-                {selectedIncident && (
+            ) : (
+                // other pages
+                selectedIncident ? (
+                    // selected incident page
                     <div>
                         <Typography variant="body1" sx={{ mb: 1 }}>Incident ID: {selectedIncident.id}</Typography>
                         <Typography variant="body1" sx={{ mb: 1 }}>Open Date: {new Date(selectedIncident.openDate).toLocaleString()}</Typography>
                         <Typography variant="body1" sx={{ mb: 1 }}>
                             Close Date: {selectedIncident.closeDate ? new Date(selectedIncident.closeDate).toLocaleString() : ''}
                         </Typography>
-
 
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                             <Button
@@ -138,9 +200,30 @@ const Incident = () => {
                                 Delete Incident
                             </Button>
                         </Box>
-
                     </div>
-                )}
+                ) : (
+                    // nothing selected page
+                    <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+                        <Typography variant="h4" sx={{ textAlign: 'center', display: 'block', marginBottom: 1, color: "#ffffff48" }}>
+                            Select an Incident or{' '}
+                            <a
+                                onClick={handleCreateNewIncident}
+                                style={{
+                                    color: '#00bcd4',
+                                    textDecoration: 'underline',
+                                    cursor: 'pointer',
+                                    marginLeft: '5px',
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'none'}
+                                onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                            >
+                                Create One
+                            </a>
+                        </Typography>
+                    </div>
+                )
+            )}
+
             </Box>
         </Box>
     );

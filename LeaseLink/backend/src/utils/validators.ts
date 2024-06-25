@@ -17,7 +17,6 @@ export const validate = async (validations:ValidationChain[]) => {
         if (errors.isEmpty()){
             return next();
         }
-        console.log("validate worked");
         
         return res.status(422).json({errors:errors.array()});
     }

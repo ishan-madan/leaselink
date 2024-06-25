@@ -8,7 +8,6 @@ const vendorSchema = new mongoose.Schema({
     vendorName: {
         type: String,
         required: true,
-        unique: true,
     },
     vendorType: {
         type: String,

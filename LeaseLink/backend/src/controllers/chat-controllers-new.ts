@@ -56,12 +56,10 @@ export const fetchChats = async (
     next: NextFunction
 ) => {
     try {
-        console.log("got here");
         // get id
         const { incidentId } = req.params;
 
         const user  = await User.findById(res.locals.jwtData.id);
-        console.log(user.name);
         if (!user){
             return res.status(401).json({message: "User not registered or token malfunctioned"});
         }

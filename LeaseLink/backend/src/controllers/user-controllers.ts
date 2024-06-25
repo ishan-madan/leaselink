@@ -76,7 +76,6 @@ export const userLogin = async (
     // user login
     try {
         const {email, password} = req.body;
-        console.log(req.body);
         // first find user by email
         const user = await User.findOne({email});
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllUsers, userLogin, userSignup, verifyUser } from "../controllers/user-controllers.js";
+import { getAllUsers, userLogin, userLogout, userSignup, verifyUser } from "../controllers/user-controllers.js";
 import { loginValidator, signupValidator, validate } from "../utils/validators.js";
 import { verifyToken } from "../utils/token-manager.js";
 const userRoutes = Router();
@@ -11,5 +11,7 @@ userRoutes.post("/signup", await validate(signupValidator), userSignup);
 userRoutes.post("/login", await validate(loginValidator), userLogin);
 // sends get request to the database to get user cookie
 userRoutes.get("/auth-status", verifyToken, verifyUser);
+// sends post request to the database to logout
+userRoutes.post("/logout", userLogout);
 export default userRoutes;
 //# sourceMappingURL=user-routes.js.map

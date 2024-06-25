@@ -116,4 +116,13 @@ export const verifyUser = async (req, res, next) => {
         return res.status(200).json({ message: "ERROR", casue: error.message });
     }
 };
+export const userLogout = (req, res, next) => {
+    res.clearCookie(COOKIE_NAME, {
+        path: "/",
+        domain: "localhost",
+        httpOnly: true,
+        signed: true,
+    });
+    return res.status(200).json({ message: "Logout successful" });
+};
 //# sourceMappingURL=user-controllers.js.map

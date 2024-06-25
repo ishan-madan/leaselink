@@ -16,14 +16,12 @@ export const verifyToken = async (req, res, next) => {
         return jwt.verify(token, process.env.JWT_SECRET, (error, success) => {
             if (error) {
                 reject(error.message);
-                console.log("token worked");
                 return res.status(401).json({ message: "Token expired" });
             }
             else {
                 // console.log("Token verification successful");
                 resolve();
                 res.locals.jwtData = success;
-                console.log(success);
                 return next();
             }
         });
