@@ -1,4 +1,5 @@
 import User from "../models/NewUser.js";
+import { randomUUID } from "crypto";
 // TODO: get user for jwt.local.id token when integrated with front end
 export const getIncidents = async (req, res, next) => {
     try {
@@ -39,6 +40,7 @@ export const createIncident = async (req, res, next) => {
             title,
             address: user.address,
             openDate: Date.now(),
+            chats: { id: () => randomUUID(), role: "assistant", content: "Hi! What seems to be the problem with your property today?" }
         };
         // push to incident array
         user.incidents.push(newIncident);
@@ -47,20 +49,6 @@ export const createIncident = async (req, res, next) => {
         user.markModified("incidents");
         await user.save();
         // return status
-        return res.status(200).json({ incidentId });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(200).json({ message: "ERROR", error });
-    }
-};
-export const getIndcidentId = async (req, res, next) => {
-    try {
-        const { title } = req.body;
-        // get user
-        const user = await User.findById(res.locals.jwtData.id);
-        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
-        const incidentId = user.incidents[incidentIndex].id;
         return res.status(200).json({ incidentId });
     }
     catch (error) {
@@ -137,7 +125,7 @@ export const reopenIncident = async (req, res, next) => {
 export const deleteIncident = async (req, res, next) => {
     try {
         // get params
-        const { title } = req.params;
+        const { incidentId } = req.params;
         // get user
         const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
@@ -145,7 +133,7 @@ export const deleteIncident = async (req, res, next) => {
             return { error: "User not registered or token malfunctioned" };
         }
         // get specific incident being reopened
-        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
+        const incidentIndex = user.incidents.findIndex(incident => incident.id === incidentId);
         // handle case where incident does not exist (shoulnt happen if we pass in title of curently opened incident, but just in case)
         if (incidentIndex == -1) {
             return res.status(404).json({ message: "Incident does not exist" });
