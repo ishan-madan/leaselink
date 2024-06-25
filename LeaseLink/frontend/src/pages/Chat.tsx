@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { green, red } from '@mui/material/colors';
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io';
-import { fetchChats, sendChatRequest } from '../helpers/api-communicator';
+import { fetchChats, incidentCloseRequest, incidentReopenRequest, sendChatRequest } from '../helpers/api-communicator';
 import toast from "react-hot-toast";
 import { useParams } from 'react-router-dom';
 
@@ -20,6 +20,7 @@ const Chat = () => {
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const { incidentId } = useParams<{ incidentId: string }>();
+  const [incidentClosed, setIncidentClosed] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
@@ -28,7 +29,7 @@ const Chat = () => {
     }
 
     // if closeDate exists
-    if (auth?.user?.incidents[auth?.user?.incidents.findIndex(incident => incident.id === incidentId)].closeDate){
+    if (incidentClosed){
       toast.error("Incident is closed. Please reopen or create a new incident", {id:"response"});
       return;
     }
@@ -47,14 +48,14 @@ const Chat = () => {
     }
 }
 
-// NEED TO FINISH IMPLEMENTATION
-const handleClose = async() => {
-  console.log("closing incident")
+const handleClose = async(id:string) => {
+  await incidentCloseRequest(id);
+  setIncidentClosed(true);
 }
 
-// NEED TO FINISH IMPLEMENTATION
-const handleReopen = async() => {
-  console.log("reopening incident");
+const handleReopen = async(id:string) => {
+  await incidentReopenRequest(id);
+  setIncidentClosed(false);
 }
 
 // Load initial chats on component mount
@@ -62,6 +63,7 @@ useEffect(() => {
 
   // refresh the page if the chats are not available
   if (auth?.user?.incidents.filter(incident => incident.id === incidentId).length == 0){
+    console.log("refreshing");
     window.location.reload();
   }
   
@@ -77,9 +79,13 @@ useEffect(() => {
     }
   };
 
-
   fetchInitialChats();
 }, [incidentId]);
+
+const fixButton = async() => {
+  setIncidentClosed(!!auth?.user?.incidents.filter(incident => incident.id === incidentId)[0].closeDate);
+  console.log(auth, incidentClosed);
+}
 
 useEffect(() => {
     if (chatContainerRef.current) {
@@ -92,10 +98,11 @@ useEffect(() => {
       handleSubmit();
     }
   }
-  
 
+  
+  
   return (
-    <Box sx={{display:"flex", flex:1, width:"100%", height:"100%", mt:3, gap:3}}>
+    <Box onLoad={() => setTimeout(fixButton, 750)} sx={{display:"flex", flex:1, width:"100%", height:"100%", mt:3, gap:3}}>
       <Box sx={{display:{md:"flex", xs:"none", sm:"none"}, flex:0.2, flexDirection:"colun"}}>
         <Box sx={{display:"flex", width:"100%", height:"60vh", bgcolor:"rgb(17, 29, 39)", borderRadius:5, flexDirection:"column", mx:3}}>
           
@@ -112,8 +119,7 @@ useEffect(() => {
                 </Typography>
               ))}
           </Typography>
-
-          {!auth?.user?.incidents.filter(incident => incident.id === incidentId)[0].closeDate ? (
+          { !incidentClosed ? (
             <Button sx={{
               width:"200px", 
               my:"auto", 
@@ -123,7 +129,7 @@ useEffect(() => {
               mx:"auto", 
               bgcolor:red[300], 
               ":hover":{bgcolor:red.A400,}
-            }} onClick={handleClose}>
+            }} onClick={() => handleClose(incidentId ? incidentId : "a")}>
               Close Incident
             </Button>
           ) : (
@@ -136,7 +142,7 @@ useEffect(() => {
               mx:"auto", 
               bgcolor:green[400], 
               ":hover":{bgcolor:green[300],}
-            }} onClick={handleReopen}>
+            }} onClick={() => handleReopen(incidentId ? incidentId : "a")}>
               Reopen Incident
             </Button>
           )}
