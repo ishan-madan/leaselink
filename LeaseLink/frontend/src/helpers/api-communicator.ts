@@ -1,4 +1,5 @@
 import axios from "axios"
+import Incident from "../pages/Incident";
 
 export const loginUser = async (email:string, password:string) => {
     // send post request to backend with email and password data
@@ -55,9 +56,9 @@ export const createIncidentRequest = async(title:string) => {
 
 export const deleteIncidentRequest = async (incidentId: string) => {
     try {
-        const response = await axios.delete(`/incident/delete/${incidentId}`); // Adjust the API endpoint as per your backend
+        const res = await axios.delete(`/incident/delete/${incidentId}`);
 
-        if (response.status === 200) {
+        if (res.status === 200) {
             return { success: true };
         } else {
             throw new Error('Failed to delete incident');
@@ -68,27 +69,38 @@ export const deleteIncidentRequest = async (incidentId: string) => {
     }
 };
 
-// functionality to delete the request
+export const incidentCloseRequest = async (incidentId: string) => {
+    try {
+        console.log("closing");
+        const res = await axios.post("/incident/close/", {incidentId});
+        console.log("close axios ran");
 
-// const MyComponent = () => {
-//   const deleteProperty = async () => {
-//     const address = "1501 Moss Ln, Southlake, TX 76092";
-//     const encodedAddress = encodeURIComponent(address);
-//     const url = `http://localhost:3000/api/properties/delete/${encodedAddress}`;
+        if (res.status === 200) {
+            return { success: true };
+        } else {
+            throw new Error('Failed to close incident');
+        }
 
-//     try {
-//       const response = await axios.delete(url);
-//       console.log('Property deleted successfully:', response.data);
-//     } catch (error) {
-//       console.error('Error deleting property:', error.message);
-//     }
-//   };
+    } catch (error) {
+        console.error('Error deleting incident:', error);
+        throw error;
+    }
+}
 
-//   return (
-//     <button onClick={deleteProperty}>
-//       Delete Property
-//     </button>
-//   );
-// };
+export const incidentReopenRequest = async (incidentId: string) => {
+    try {
+        console.log("reopening");
+        const res = await axios.post("/incident/reopen/", {incidentId});
+        console.log("reopen axios ran");
 
-// export default MyComponent;
+        if (res.status === 200) {
+            return { success: true };
+        } else {
+            throw new Error('Failed to close incident');
+        }
+
+    } catch (error) {
+        console.error('Error deleting incident:', error);
+        throw error;
+    }
+}
