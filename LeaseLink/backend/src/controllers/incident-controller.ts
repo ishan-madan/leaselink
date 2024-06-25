@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/NewUser.js";
 import IncidentReport from "../models/IncidentReport.js";
+import { randomUUID } from "crypto";
 
 // TODO: get user for jwt.local.id token when integrated with front end
 export const getIncidents = async(
@@ -58,6 +59,7 @@ export const createIncident = async (
             title,
             address: user.address,
             openDate: Date.now(),
+            chats: {id:() => randomUUID(), role:"assistant", content:"Hi! What seems to be the problem with your property today?"}
         };
 
         // push to incident array
@@ -79,27 +81,6 @@ export const createIncident = async (
     }
 }
 
-export const getIndcidentId = async(
-    req: Request, 
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        const { title } = req.body;
-
-        // get user
-        const user = await User.findById(res.locals.jwtData.id);
-
-        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
-
-        const incidentId = user.incidents[incidentIndex].id;
-
-        return res.status(200).json({incidentId});
-    } catch (error) {
-        console.log(error);
-        return res.status(200).json({message:"ERROR", error});
-    }
-}
 
 // TODO: get user info from local token. Also, this should be connected to a button on the chat page for an incident
 export const closeIncident = async(
@@ -201,7 +182,7 @@ export const deleteIncident = async (
 ) => {
     try {
         // get params
-        const { title } = req.params;
+        const { incidentId } = req.params;
 
         // get user
         const user = await User.findById(res.locals.jwtData.id);
@@ -212,7 +193,7 @@ export const deleteIncident = async (
         }
 
         // get specific incident being reopened
-        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
+        const incidentIndex = user.incidents.findIndex(incident => incident.id === incidentId);
 
         // handle case where incident does not exist (shoulnt happen if we pass in title of curently opened incident, but just in case)
         if (incidentIndex == -1){
