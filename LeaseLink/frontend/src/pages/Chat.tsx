@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { red } from '@mui/material/colors';
+import { green, red } from '@mui/material/colors';
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io';
 import { fetchChats, sendChatRequest } from '../helpers/api-communicator';
@@ -47,6 +47,15 @@ const Chat = () => {
     }
 }
 
+// NEED TO FINISH IMPLEMENTATION
+const handleClose = async() => {
+  console.log("closing incident")
+}
+
+// NEED TO FINISH IMPLEMENTATION
+const handleReopen = async() => {
+  console.log("reopening incident");
+}
 
 // Load initial chats on component mount
 useEffect(() => {
@@ -67,6 +76,7 @@ useEffect(() => {
       toast.error('Failed to fetch initial chats');
     }
   };
+
 
   fetchInitialChats();
 }, [incidentId]);
@@ -103,12 +113,34 @@ useEffect(() => {
               ))}
           </Typography>
 
-
-          <Button sx={{width:"200px", my:"auto", color:"white", fontWeight:700, borderRadius:3, mx:"auto", bgcolor:red[300], ":hover":{
-            bgcolor:red.A400,
-          }}}>
-            Close Incident
-          </Button>
+          {!auth?.user?.incidents.filter(incident => incident.id === incidentId)[0].closeDate ? (
+            <Button sx={{
+              width:"200px", 
+              my:"auto", 
+              color:"white", 
+              fontWeight:700, 
+              borderRadius:3, 
+              mx:"auto", 
+              bgcolor:red[300], 
+              ":hover":{bgcolor:red.A400,}
+            }} onClick={handleClose}>
+              Close Incident
+            </Button>
+          ) : (
+            <Button sx={{
+              width:"200px", 
+              my:"auto", 
+              color:"white", 
+              fontWeight:700, 
+              borderRadius:3, 
+              mx:"auto", 
+              bgcolor:green[400], 
+              ":hover":{bgcolor:green[300],}
+            }} onClick={handleReopen}>
+              Reopen Incident
+            </Button>
+          )}
+          
         </Box>
       </Box>
       <Box sx={{display:"flex", flex:{md:0.8, xs:1, sm:1}, flexDirection:"column", px:3}}>

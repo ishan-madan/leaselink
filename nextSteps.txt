@@ -1,12 +1,7 @@
 NEED TO DO:
 
-- Add in functionality for all auto user verifications for all api calls 
-NOTE: Something about verifyAdmin function is preventing program from switching accounts.
-It keepts getting stuck on one account and it will keep thinking it is that account based 
-on the token, even when its logged out. verifyToken works perfectly fine when i dont have it 
-running on the vandor and property routes. Figure out this issue.
-
 - add in frontend functionality for delete incident, close/open chat etc
+KEEP WORKING ON THIS, GET OPEN/CLOSE DONE AS WELL
 
 - add in functionality for admin website (add vendors, add properties, property dropdowns, vendor dropdowns, see all incidents and chats)
 
@@ -17,6 +12,12 @@ it call on the api to get data from the database
 
 
 POSSIBLY DONE BUT NEEDS TO BE CONFIRMED:
+
+- Add in functionality for all auto user verifications for all api calls 
+NOTE: Something about verifyAdmin function is preventing program from switching accounts.
+It keepts getting stuck on one account and it will keep thinking it is that account based 
+on the token, even when its logged out. verifyToken works perfectly fine when i dont have it 
+running on the vandor and property routes. Figure out this issue.
 
 - write method in api communicator to fetch the chat messages from 
 the backend upon opening the chat page. Functionality is commented out
