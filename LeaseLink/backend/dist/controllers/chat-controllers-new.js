@@ -9,12 +9,12 @@ export const generateChatCompletion = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ message: "User not registered or token malfunctioned" });
         }
-        //exit method if issue is closed
-        if (user.incidents[0].closeDate) {
-            return res.status(403).json({ message: "Incident is closed. Please reopen to continue chatting." });
-        }
         // find the incident index
         const incidentIndex = user.incidents.findIndex(incident => incident.id === incidentId);
+        //exit method if issue is closed
+        if (user.incidents[incidentIndex].closeDate) {
+            return res.status(403).json({ message: "Incident is closed. Please reopen to continue chatting." });
+        }
         // grab the chats of the user
         const chats = user.incidents[incidentIndex].chats.map(({ role, content }) => ({ role, content }));
         chats.push({ role: "user", content: message });

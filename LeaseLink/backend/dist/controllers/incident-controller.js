@@ -60,7 +60,7 @@ export const createIncident = async (req, res, next) => {
 export const closeIncident = async (req, res, next) => {
     try {
         // get params
-        const { title } = req.body;
+        const { incidentId } = req.body;
         // get user
         const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
@@ -69,7 +69,7 @@ export const closeIncident = async (req, res, next) => {
         }
         // get specific incident being closed
         // TODO: USE THIS LINE FOR INDEX FINDING LATER ON
-        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
+        const incidentIndex = user.incidents.findIndex(incident => incident.id === incidentId);
         // handle case where incident does not exist (shoulnt happen if we pass in title of curently opened incident, but just in case)
         if (incidentIndex == -1) {
             return res.status(404).json({ message: "Incident does not exist" });
@@ -93,7 +93,7 @@ export const closeIncident = async (req, res, next) => {
 export const reopenIncident = async (req, res, next) => {
     try {
         // get params
-        const { title } = req.body;
+        const { incidentId } = req.body;
         // get user
         const user = await User.findById(res.locals.jwtData.id);
         // Handle case where user is not found
@@ -102,7 +102,7 @@ export const reopenIncident = async (req, res, next) => {
         }
         // get specific incident being reopened
         // TODO: USE THIS LINE FOR INDEX FINDING LATER ON
-        const incidentIndex = user.incidents.findIndex(incident => incident.title === title);
+        const incidentIndex = user.incidents.findIndex(incident => incident.id === incidentId);
         // handle case where incident does not exist (shoulnt happen if we pass in title of curently opened incident, but just in case)
         if (incidentIndex == -1) {
             return res.status(404).json({ message: "Incident does not exist" });
