@@ -44,19 +44,29 @@ export const fetchChats = async(incidentId:string) => {
 }
 
 export const createIncidentRequest = async(title:string) => {
-    console.log("creating incident: ", title);
     const res = await axios.post("/incident/create/", {title});
-    console.log("axios ran");
     if (res.status !== 200) {
         throw new Error("Unable to fetch chats");
     }
 
     const data = await res.data;
-    console.log(res.data);
-    // const res2 = await axios.post("/getIncidentId/", {title});
-    // const id = await res2.data;
     return data;
 }
+
+export const deleteIncidentRequest = async (incidentId: string) => {
+    try {
+        const response = await axios.delete(`/incident/delete/${incidentId}`); // Adjust the API endpoint as per your backend
+
+        if (response.status === 200) {
+            return { success: true };
+        } else {
+            throw new Error('Failed to delete incident');
+        }
+    } catch (error) {
+        console.error('Error deleting incident:', error);
+        throw error;
+    }
+};
 
 // functionality to delete the request
 

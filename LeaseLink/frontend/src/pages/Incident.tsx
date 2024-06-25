@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Typography, List, ListItem, ListItemText, Box, Button, TextField } from '@mui/material';
+import { Typography, List, ListItem, ListItemText, Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from "react-hot-toast";
-import { createIncidentRequest } from '../helpers/api-communicator';
+import { createIncidentRequest, deleteIncidentRequest } from '../helpers/api-communicator';
 
 interface Incident {
     id: string;
@@ -19,17 +19,27 @@ const Incident = () => {
     const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
     const [creatingIncident, setCreatingIncident] = useState(false);
     const [incidentTitle, setIncidentTitle] = useState('');
+    const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
 
     if (!auth) {
         return <Typography>Loading...</Typography>;
     }
 
-    // Sort incidents so that open incidents come first, then closed incidents
-    const sortedIncidents = auth?.user?.incidents.slice().sort((a: Incident, b: Incident) => {
-        if (!a.closeDate && b.closeDate) return -1; // a is open, b is closed (a comes first)
-        if (a.closeDate && !b.closeDate) return 1; // a is closed, b is open (b comes first)
-        return 0; // both are open or both are closed (no change in order)
-    });
+    const [sortedIncidents, setSortedIncidents] = useState<Incident[]>([]); // Initialize as empty array or fetch from context or props
+
+    // Example initialization, replace with your actual logic
+    useEffect(() => {
+        // Fetch incidents or set them from context or props
+        if (auth?.user?.incidents) {
+            const sorted = auth.user.incidents.slice().sort((a: Incident, b: Incident) => {
+                if (!a.closeDate && b.closeDate) return -1;
+                if (a.closeDate && !b.closeDate) return 1;
+                return 0;
+            });
+            setSortedIncidents(sorted);
+        }
+    }, [auth?.user?.incidents]);
+
 
     const handleIncidentClick = (incident: Incident) => {
         setCreatingIncident(false);
@@ -55,36 +65,66 @@ const Incident = () => {
         navigate(`/chat/${incidentId}`);
     };
 
+    // const handleDeleteIncident = async (incidentId: string) => {
+    //     try {
+    //         // Call API to delete incident
+    //         await deleteIncidentRequest(incidentId);
+    
+    //         // Update frontend state to remove the deleted incident
+    //         setSortedIncidents((prevIncidents) =>
+    //             prevIncidents.filter((incident) => incident.id !== incidentId)
+    //         );
+    
+    //         // Reset selectedIncident state if the deleted incident was selected
+    //         if (selectedIncident && selectedIncident.id === incidentId) {
+    //             setSelectedIncident(null);
+    //         }
+    
+    //         toast.success('Incident Deleted Successfully');
+    //     } catch (error) {
+    //         console.error('Error deleting incident:', error);
+    //         toast.error('Failed to delete incident');
+    //     }
+    // };
     const handleDeleteIncident = (incidentId: string) => {
-        // Implement delete incident functionality here
-        console.log(`Deleting incident with ID: ${incidentId}`);
+        // Show confirmation dialog before deleting incident
+        setDeleteConfirmationOpen(true);
     };
+
+    const confirmDeleteIncident = async () => {
+        try {
+            // Call API to delete incident
+            await deleteIncidentRequest(selectedIncident!.id);
+
+            // Update frontend state to remove the deleted incident
+            setSortedIncidents((prevIncidents) =>
+                prevIncidents.filter((incident) => incident.id !== selectedIncident!.id)
+            );
+
+            // Reset selectedIncident state
+            setSelectedIncident(null);
+
+            toast.success('Incident Deleted Successfully');
+        } catch (error) {
+            console.error('Error deleting incident:', error);
+            toast.error('Failed to delete incident');
+        }
+
+        // Close delete confirmation dialog
+        setDeleteConfirmationOpen(false);
+    };
+
+    const cancelDeleteIncident = () => {
+        // Close delete confirmation dialog without deleting incident
+        setDeleteConfirmationOpen(false);
+    };
+
 
     const handleCreateNewIncident = () => {
         setSelectedIncident(null);
         setCreatingIncident(true);
     };
 
-    // const handleNewIncidentSubmit = async() => {
-    //     const content = inputRef.current?.value as string;
-    //     if (inputRef && inputRef.current){
-    //         inputRef.current.value = "";
-    //     }
-    //     console.log(content);
-
-    //     if (content != ""){
-    //         toast.loading("Creating Incidident");
-
-    //         const data = await createIncidentRequest(content);
-            
-    //         const incidentId = data.incidentId;
-
-    //         toast.success("Incident Created");
-
-    //         navigate(`/chat/${incidentId}`);
-
-    //     }
-    // };
     const handleNewIncidentSubmit = async () => {
         if (incidentTitle.trim() === '') {
             console.error('Empty incident title.');
@@ -193,7 +233,7 @@ const Incident = () => {
                             <Button
                                 variant="contained"
                                 onClick={() => handleDeleteIncident(selectedIncident.id)}
-                                sx={{ bgcolor: '#f44336', color: 'white', ml: 2, mr: 4 }} // Adjusted mr value
+                                sx={{ bgcolor: '#f44336', color: 'white', ml: 2, mr: 4, '&:hover': {bgcolor: '#c84336'} }} // Adjusted mr value
                             >
                                 Delete Incident
                             </Button>
@@ -203,17 +243,18 @@ const Incident = () => {
                     // nothing selected page
                     <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
                         <Typography variant="h4" sx={{ textAlign: 'center', display: 'block', marginBottom: 1, color: "#ffffff48" }}>
-                            Select an Incident or{' '}
-                            <a
-                                onClick={handleCreateNewIncident}
-                                style={{
-                                    color: '#00bcd4',
-                                    textDecoration: 'underline',
-                                    cursor: 'pointer',
-                                    marginLeft: '5px',
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'none'}
-                                onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                            Select an Incident
+                        </Typography>
+                        <Typography variant="h6" sx={{ textAlign: 'center', display: 'block', color: "#ffffff48" }}>
+                        or <a
+                            onClick={handleCreateNewIncident}
+                            style={{
+                                color: '#00bcd4', // Light blue color
+                                textDecoration: 'underline', // Underline text
+                                cursor: 'pointer', // Change cursor to pointer on hover
+                                marginLeft: "5px"}}
+                            onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'none'} // Remove underline on hover
+                            onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'underline'} // Add underline when not hovered
                             >
                                 Create One
                             </a>
@@ -223,7 +264,28 @@ const Incident = () => {
             )}
 
             </Box>
+            <Dialog
+                open={deleteConfirmationOpen}
+                onClose={cancelDeleteIncident}
+            >
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this incident?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={cancelDeleteIncident} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={confirmDeleteIncident} color="primary" autoFocus>
+                        Confirm Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </Box>
+        
     );
 };
 
