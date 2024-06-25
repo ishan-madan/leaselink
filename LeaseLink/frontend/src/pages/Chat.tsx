@@ -47,12 +47,17 @@ const Chat = () => {
     }
 }
 
-// USE THIS TO FETCH CHATS. NEED TO PASS IN INCIDENT ID TO THE REQUEST MOST LIKELY
+
 // Load initial chats on component mount
 useEffect(() => {
+
+  // refresh the page if the chats are not available
+  if (auth?.user?.incidents.filter(incident => incident.id === incidentId).length == 0){
+    window.location.reload();
+  }
+  
   const fetchInitialChats = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
       // Fetch chats for the incidentId from your API
       const chatData = await fetchChats(incidentId ? incidentId : "a"); // Implement this function based on your API structure
       setChatMessages(chatData.chats); // Update state with fetched chat messages

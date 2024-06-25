@@ -18,7 +18,6 @@ const Incident = () => {
     const navigate = useNavigate();
     const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
     const [creatingIncident, setCreatingIncident] = useState(false);
-    const inputRef = useRef<HTMLInputElement | null>(null);
     const [incidentTitle, setIncidentTitle] = useState('');
 
     if (!auth) {
@@ -98,8 +97,7 @@ const Incident = () => {
             const incidentId = incidentData.incidentId;
 
             toast.success('Incident Created');
-            await new Promise(resolve => setTimeout(resolve, 500));
-            navigate(`/chat/${incidentId}`);
+            navigate(`/chat/${incidentId}`, {state: { forceRefresh: true }});
 
         } catch (error) {
             console.error('Error creating incident:', error);

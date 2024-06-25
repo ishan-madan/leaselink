@@ -6,7 +6,6 @@ import Signup from "./pages/Signup"
 import Chat from "./pages/Chat"
 import NotFound from "./pages/NotFound"
 import Incident from "./pages/Incident"
-import { useAuth } from "./context/AuthContext"
 
 function App() {
   
