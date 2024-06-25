@@ -1,5 +1,4 @@
 import axios from "axios"
-import Incident from "../pages/Incident";
 
 export const loginUser = async (email:string, password:string) => {
     // send post request to backend with email and password data
