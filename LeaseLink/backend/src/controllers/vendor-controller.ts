@@ -13,8 +13,7 @@ export const getUserProperty = async (
 ) => {
     try {
         // Find user by email
-        const email = req.body.email;
-        const user = await User.findOne({email});
+        const user = await User.findById(res.locals.jwtData.id);
 
         // Handle case where user is not found
         if (!user) {
