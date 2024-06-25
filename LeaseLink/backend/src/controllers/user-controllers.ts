@@ -76,6 +76,7 @@ export const userLogin = async (
     // user login
     try {
         const {email, password} = req.body;
+        console.log(req.body);
         // first find user by email
         const user = await User.findOne({email});
 
@@ -152,3 +153,14 @@ export const verifyUser = async (
         return res.status(200).json({message: "ERROR", casue:error.message});
     }
 }
+
+export const userLogout = (req: Request, res: Response, next: NextFunction) => {
+    res.clearCookie(COOKIE_NAME, {
+        path: "/",
+        domain: "localhost",
+        httpOnly: true,
+        signed: true,
+    });
+    
+    return res.status(200).json({ message: "Logout successful" });
+};
