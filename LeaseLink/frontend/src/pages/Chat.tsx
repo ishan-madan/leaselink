@@ -129,7 +129,8 @@ const Chat = () => {
 
   // start the button after inline 100ms delay (from HTML call). 
   // inline delay present in outer box to allow time for the database values to initialize so that the button loads correctly
-  const startButton = async() => {
+  // IF YOU GET ERRORS LATER, PUT ASYNC IN FRONT OF PARENTHESIS
+  const startButton = () => {
     // set button loaded to true so that the button can show up
     setButtonLoaded(true);
     
