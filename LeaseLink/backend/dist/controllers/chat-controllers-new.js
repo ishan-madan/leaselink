@@ -24,11 +24,13 @@ export const generateChatCompletion = async (req, res, next) => {
             apiKey: process.env.OPEN_AI_SECRET || '',
             organization: process.env.OPENAI_ORGANIZATION_ID || '',
         });
-        const completion = await openai.chat.completions.create({ messages: [{ role: "system", content: "You are a helpful assistant designed to aid renters." }, ...chats], model: "gpt-3.5-turbo-0125" });
+        const completion = await openai.chat.completions.create({ messages: [{ role: "system", content: process.env.CHATGPT_SYS_PROMPT }, ...chats], model: process.env.OPENAI_MODEL });
         const outputMessage = completion.choices[0].message;
+        // console.log(outputMessage);
         user.incidents[incidentIndex].chats.push(outputMessage);
         user.markModified('incidents');
         await user.save();
+        console.log(user.incidents[incidentIndex].chats);
         return res.status(200).json({ chats: user.incidents[incidentIndex].chats });
     }
     catch (error) {

@@ -10,7 +10,6 @@ interface Incident {
     title: string;
     openDate: Date;
     closeDate?: Date | null;
-    // Add other properties as per your incident schema
 }
 
 const Incident = () => {
@@ -20,16 +19,10 @@ const Incident = () => {
     const [creatingIncident, setCreatingIncident] = useState(false);
     const [incidentTitle, setIncidentTitle] = useState('');
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+    const [sortedIncidents, setSortedIncidents] = useState<Incident[]>([]);
 
-    if (!auth) {
-        return <Typography>Loading...</Typography>;
-    }
 
-    const [sortedIncidents, setSortedIncidents] = useState<Incident[]>([]); // Initialize as empty array or fetch from context or props
-
-    // Example initialization, replace with your actual logic
     useEffect(() => {
-        // Fetch incidents or set them from context or props
         if (auth?.user?.incidents) {
             const sorted = auth.user.incidents.slice().sort((a: Incident, b: Incident) => {
                 if (!a.closeDate && b.closeDate) return -1;
@@ -38,7 +31,17 @@ const Incident = () => {
             });
             setSortedIncidents(sorted);
         }
+        console.log(sortedIncidents);
     }, [auth?.user?.incidents]);
+
+    const checkIncidents = () => {
+        console.log("running");
+        if (sortedIncidents.length == 0){
+            if (!auth?.user?.incidents){
+                window.location.reload();
+            }
+        }
+    }
 
 
     const handleIncidentClick = (incident: Incident) => {
@@ -65,27 +68,6 @@ const Incident = () => {
         navigate(`/chat/${incidentId}`);
     };
 
-    // const handleDeleteIncident = async (incidentId: string) => {
-    //     try {
-    //         // Call API to delete incident
-    //         await deleteIncidentRequest(incidentId);
-    
-    //         // Update frontend state to remove the deleted incident
-    //         setSortedIncidents((prevIncidents) =>
-    //             prevIncidents.filter((incident) => incident.id !== incidentId)
-    //         );
-    
-    //         // Reset selectedIncident state if the deleted incident was selected
-    //         if (selectedIncident && selectedIncident.id === incidentId) {
-    //             setSelectedIncident(null);
-    //         }
-    
-    //         toast.success('Incident Deleted Successfully');
-    //     } catch (error) {
-    //         console.error('Error deleting incident:', error);
-    //         toast.error('Failed to delete incident');
-    //     }
-    // };
     const handleDeleteIncident = () => {
         // Show confirmation dialog before deleting incident
         setDeleteConfirmationOpen(true);
@@ -152,7 +134,7 @@ const Incident = () => {
     };
 
     return (
-        <Box sx={{ display: 'grid', gridTemplateColumns: '40% 60%', gap: 4, height: 'calc(100vh - 64px)' }}>
+        <Box onLoad={checkIncidents} sx={{ display: 'grid', gridTemplateColumns: '40% 60%', gap: 4, height: 'calc(100vh - 64px)' }}>
             {/* Left side with scrollable incident list */}
             <Box sx={{ overflowY: 'auto', maxHeight: '100%', paddingRight: 2, pl: 2 }}>
                 <Box sx={{ position: 'sticky', top: 0, zIndex: 1, bgcolor: '#05101c', paddingBottom: 2 }}>
