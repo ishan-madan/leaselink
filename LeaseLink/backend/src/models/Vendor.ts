@@ -26,6 +26,10 @@ const vendorSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    vendorLanguage: {
+        type: String,
+        default: "ENG",
+    }
 });
 
 export default mongoose.model("Vendor", vendorSchema);
