@@ -1,7 +1,10 @@
 NEED TO DO:
 
+- write a chat message formatter method to make the formatting look nicer
+
 - add in functionality for admin website (add vendors, add properties, property dropdowns, vendor dropdowns, see all incidents and chats)
 
+- make all the buttons and pages work
 
 
 
@@ -11,7 +14,7 @@ NEED TO DO:
 
 POSSIBLY DONE BUT NEEDS TO BE CONFIRMED:
 
-- Also strat fine tuning openAI and figure out if you can have 
+- Also start fine tuning openAI and figure out if you can have 
 it call on the api to get data from the database
 
 
