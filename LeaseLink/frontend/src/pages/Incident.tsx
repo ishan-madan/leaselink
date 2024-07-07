@@ -31,11 +31,11 @@ const Incident = () => {
             });
             setSortedIncidents(sorted);
         }
-        console.log(sortedIncidents);
+        // console.log(sortedIncidents);
     }, [auth?.user?.incidents]);
 
     const checkIncidents = () => {
-        console.log("running");
+        // console.log("running");
         if (sortedIncidents.length == 0){
             if (!auth?.user?.incidents){
                 window.location.reload();
@@ -57,7 +57,7 @@ const Incident = () => {
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-          handleNewIncidentSubmit();
+            handleNewIncidentSubmit();
         }
         if (event.key === "Escape"){
             setCreatingIncident(false);
@@ -249,19 +249,27 @@ const Incident = () => {
             <Dialog
                 open={deleteConfirmationOpen}
                 onClose={cancelDeleteIncident}
+                PaperProps={{
+                    style: {
+                        backgroundColor: '#05101c',
+                        color: 'white',
+                        padding: '20px',
+                        borderRadius: '10px',
+                    },
+                }}
             >
-                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogTitle sx={{ color: 'white' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText sx={{ color: 'white' }}>
                         Are you sure you want to delete this incident?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={cancelDeleteIncident} color="primary">
+                    <Button onClick={cancelDeleteIncident} sx={{ color: '#00bcd4' }}>
                         Cancel
                     </Button>
-                    <Button onClick={confirmDeleteIncident} color="primary" autoFocus>
-                        Confirm Delete
+                    <Button onClick={confirmDeleteIncident} sx={{ color: '#f44336' }} autoFocus>
+                        Delete Incident
                     </Button>
                 </DialogActions>
             </Dialog>

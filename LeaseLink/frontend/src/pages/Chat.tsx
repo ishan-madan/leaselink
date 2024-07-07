@@ -143,7 +143,7 @@ const Chat = () => {
       } else {
         startButton();
       }
-      console.log(buttonRef.current?.innerText);
+      // console.log(buttonRef.current?.innerText);
     }, 100);
   }
 
