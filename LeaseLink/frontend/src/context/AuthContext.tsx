@@ -1,4 +1,4 @@
-import {ReactNode, createContext, useCallback, useContext, useEffect, useState} from "react";
+import {ReactNode, createContext, /*useCallback,*/ useContext, useEffect, useState} from "react";
 import { checkAuthStatus, loginUser } from "../helpers/api-communicator";
 
 // elasped time type
@@ -79,22 +79,22 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     };
 
     //signup function
-    const signup = async (name:string, email:string, password:string) => {
+    // const signup = async (name:string, email:string, password:string) => {
 
-    };
+    // };
 
     //logout function
-    const logout = async () => {
+    // const logout = async () => {
         
-    }
+    // }
 
     // value for the children of the provider
     const value = {
         user,
         isLoggedIn,
         login,
-        signup,
-        logout,
+        // signup,
+        // logout,
     }
 
     // return the provider with the value and the contained children
