@@ -41,8 +41,8 @@ type UserAuth = {
     isLoggedIn: boolean;
     user: User | null;
     login: (email:string, password:string) => Promise<void>;
-    signup: (name:string, email:string, password:string) => Promise<void>;
-    logout: () => Promise<void>;
+    // signup: (name:string, email:string, password:string) => Promise<void>;
+    // logout: () => Promise<void>;
 }
 
 // create context for login state
@@ -79,22 +79,22 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     };
 
     //signup function
-    const signup = async (name:string, email:string, password:string) => {
-        return {name, email, password};
-    };
+    // const signup = async (name:string, email:string, password:string) => {
+
+    // };
 
     //logout function
-    const logout = async () => {
+    // const logout = async () => {
         
-    }
+    // }
 
     // value for the children of the provider
     const value = {
         user,
         isLoggedIn,
         login,
-        signup,
-        logout,
+        // signup,
+        // logout,
     }
 
     // return the provider with the value and the contained children
