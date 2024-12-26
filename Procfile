@@ -1,1 +1,1 @@
-web: node app.js
+web: node LeaseLink/backend/src/app.ts
