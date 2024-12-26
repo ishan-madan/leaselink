@@ -10,7 +10,7 @@ import {Toaster} from "react-hot-toast"
 
 
 //set base backend URL and credential requirement
-axios.defaults.baseURL = "http://localhost:5100/api/v1";
+axios.defaults.baseURL = "https://leaselink-backend.onrender.com/api/v1";
 axios.defaults.withCredentials = true;
 
 const theme = createTheme({
